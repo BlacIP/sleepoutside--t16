@@ -11,12 +11,13 @@ function addProductToCart(product) {
   }
 
   // Check if the product already exists in the cart
-  if (cart[product.Id]) { // Note the change here from product.id to product.Id
+  if (cart[product.Id]) {
+    // Note the change here from product.id to product.Id
     // If product exists, increase the quantity
     cart[product.Id].quantity += 1;
   } else {
     // If product does not exist, add it with quantity 1
-    cart[product.Id] = {...product, quantity: 1};
+    cart[product.Id] = { ...product, quantity: 1 };
   }
 
   // Save the updated cart back to local storage
