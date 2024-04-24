@@ -10,6 +10,17 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    },
+    "import/ignore": [
+      "node_modules", // Ignore all node modules
+      "vite" // Optionally, ignore just the Vite module
+    ]
+  },
   "rules": {
     "no-unused-vars": [
       1,
@@ -25,7 +36,7 @@
       }
     ],
     "no-console": 1,
-    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "quotes": ["error", "double", { "allowTemplateLiterals": true }],
     "func-names": 0,
     "space-unary-ops": 2,
     "space-in-parens": "error",
