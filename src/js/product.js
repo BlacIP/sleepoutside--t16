@@ -1,6 +1,5 @@
-import { getLocalStorage, setLocalStorage } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, getParams } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
-
 const dataSource = new ProductData("tents");
 
 function addProductToCart(product) {
@@ -34,3 +33,8 @@ async function addToCartHandler(e) {
 document
   .getElementById("addToCart")
   .addEventListener("click", addToCartHandler);
+
+const productId = getParams("product");
+
+// eslint-disable-next-line no-console
+console.log(dataSource.findProductById(productId));
