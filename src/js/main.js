@@ -1,8 +1,13 @@
-import ProductData from "./ProductData.mjs";
-import ProductList from "./ProductList.mjs";
+import { initializeCartCount } from "./CartCount.mjs";
+// import ProductData from "./ProductData.mjs";
+// import ProductList from "./ProductList.mjs";
 
-const dataSource = new ProductData("tents");
-const element = document.querySelector(".product-list");
-const listing = new ProductList("Tents", dataSource, element);
+// Initialize cart count functionality
+initializeCartCount();
 
-listing.init();
+// const dataSource = new ProductData("tents");
+// const element = document.querySelector(".product-list");
+// const listing = new ProductList("Tents", dataSource, element);
+
+// listing.init();
+

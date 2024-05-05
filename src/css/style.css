@@ -201,6 +201,56 @@ button {
   grid-row: 2;
   grid-column: 3;
 }
+/* .cart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+} */
+
+.hide {
+  display: none;
+}
+.discount-tag {
+    color: red;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.original-price {
+    color: grey;
+    text-decoration: line-through;
+    display: block; /* Ensures it appears on a new line */
+    margin-top: 5px;
+}
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(40%, 40%);
+  box-shadow: 0 0 2px #000;
+}
+.original-price {
+  text-decoration: line-through; /* Strike through the original price */
+  color: grey; /* Grey out the original price to indicate it is not the current price */
+  margin-right: 10px; /* Space between the original and the final price */
+}
+
+.discount-percentage {
+  color: red; /* Highlight only the discount percentage in red */
+  font-weight: bold; /* Make the discount percentage bold to stand out */
+}
+
 
 @media screen and (min-width: 500px) {
   body {
