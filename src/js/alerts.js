@@ -9,7 +9,7 @@ export default class Alert {
         const alerts = await response.json();
         return alerts;
       } catch (error) {
-        console.error("Failed to fetch alerts:", error);
+        error("Failed to fetch alerts:", error);
         return [];
       }
     }
