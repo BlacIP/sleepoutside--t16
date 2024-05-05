@@ -1,5 +1,5 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-import { initializeCartCount } from "./CartCount.mjs";
+import { refreshCartCount} from "./CartCount.mjs";
 
 
 function productDetailsTemplate(product) {
@@ -61,7 +61,8 @@ export default class ProductDetails {
     // Save the updated cart back to local storage
     setLocalStorage("so-cart", existingCart);
     // Initialize cart count functionality
-    initializeCartCount();
+    refreshCartCount();
+    
   }
   renderProductDetails(selector) {
     const element = document.querySelector(selector);
@@ -71,3 +72,4 @@ export default class ProductDetails {
     );
   }
 }
+
