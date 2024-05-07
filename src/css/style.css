@@ -169,10 +169,12 @@ button {
 /* Start cart list card styles */
 .cart-card {
   display: grid;
-  grid-template-columns: 25% auto 15%;
+  gap: 10px;
+  grid-template-columns: 25% auto 20px;
   font-size: var(--small-font);
   /* max-height: 120px; */
   align-items: center;
+  width: 100%;
 }
 
 .cart-card__image {
@@ -201,6 +203,62 @@ button {
   grid-row: 2;
   grid-column: 3;
 }
+p.cart-card__price{
+  margin-bottom: 5px;
+}
+/* .cart-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-top: 1px solid #ccc;
+} */
+
+.hide {
+  display: none;
+}
+.discount-tag {
+    color: var(--secondary-color);
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.original-price {
+    color: var(--tertiary-color);
+    text-decoration: line-through;
+    display: block; /* Ensures it appears on a new line */
+    margin-top: 5px;
+}
+.cart-count {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(40%, 40%);
+  box-shadow: 0 0 2px #000;
+}
+.original-price {
+  text-decoration: line-through; /* Strike through the original price */
+  color: var(--light-grey); /* Grey out the original price to indicate it is not the current price */
+  margin-right: 10px; /* Space between the original and the final price */
+}
+
+.discount-percentage {
+  color: var(--secondary-color); /* Highlight only the discount percentage in red */
+  font-weight: bold; /* Make the discount percentage bold to stand out */
+}
+.remove-item{
+  cursor: pointer;
+}
+
 
 @media screen and (min-width: 500px) {
   body {
@@ -212,7 +270,7 @@ button {
   }
   .cart-card {
     font-size: inherit;
-    grid-template-columns: 150px auto 15%;
+    grid-template-columns: 150px auto 20px;
   }
 }
 

@@ -30,3 +30,8 @@ const urlParams = new URLSearchParams(queryString);
 const product = urlParams.get(param)
 return product;
 }
+
+export function renderListWithTemplate(templateFunction, container, listItems) {
+  const itemsHtml = listItems.map(item => templateFunction(item)).join("");
+  container.innerHTML = itemsHtml;
+}
