@@ -46,13 +46,12 @@ export default class ProductDetails {
       .addEventListener("click", this.addToCart.bind(this));
   }
   addToCart() {
-    // Retrieve existing cart items from local storage or initialize to an empty array if none exist
-    const existingCart = getLocalStorage("so-cart") || [];
+    let existingCart = getLocalStorage("so-cart") || [];
     // Check if the product already exists in the cart
     const existingProductIndex = existingCart.findIndex(p => p.Id === this.product.Id);
     if (existingProductIndex !== -1) {
-      // If product exists, update quantity (if you want to implement quantity changes)
-      existingCart[existingProductIndex].quantity = (existingCart[existingProductIndex].quantity || 1) + 1;
+      // If product exists, update quantity
+      existingCart[existingProductIndex].quantity += 1;
     } else {
       // If product does not exist, add it with quantity of 1
       this.product.quantity = 1;
@@ -60,10 +59,9 @@ export default class ProductDetails {
     }
     // Save the updated cart back to local storage
     setLocalStorage("so-cart", existingCart);
-    // Initialize cart count functionality
     refreshCartCount();
-    
-  }
+}
+
   renderProductDetails(selector) {
     const element = document.querySelector(selector);
     element.insertAdjacentHTML(
