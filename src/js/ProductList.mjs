@@ -12,10 +12,9 @@ function productCardTemplate(product) {
   const isDiscounted = product.FinalPrice < product.SuggestedRetailPrice;
   const discountPercentage = isDiscounted ?
     ((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice * 100).toFixed(0) : 0;
-
-  return `<li class="product-card">
-    <a href="product_pages/?product=${product.Id}">
-      <img src="${product.Image}" alt="Image of ${product.Name}" />
+    return `<li class="product-card">
+    <a href="/product_pages/?product=${product.Id}">
+      <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Name}" />
       <h3 class="card__brand">${product.Brand.Name}</h3>
       <h2 class="card__name">${product.Name}</h2>
       <p class="product-card__price">
@@ -24,6 +23,7 @@ function productCardTemplate(product) {
       </p>
     </a>
   </li>`;
+
 }
 
 export default class ProductList {
@@ -36,9 +36,11 @@ export default class ProductList {
   }
   async init() {
     // our dataSource will return a Promise...so we can use await to resolve it.
-    const list = await this.dataSource.getData();
+    const list = await this.dataSource.getData(this.category);
     // render the list
     this.renderList(list);
+    //set the title to the current category
+    document.querySelector(".title").innerHTML = this.category;
   }
   // render after doing the first stretch
   renderList(list) {
