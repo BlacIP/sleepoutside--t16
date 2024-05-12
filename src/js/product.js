@@ -38,11 +38,11 @@
 
 // // eslint-disable-next-line no-console
 // console.log(dataSource.findProductById(productId));
-
-import { getParams } from "./utils.mjs";
+import { loadHeaderFooter , getParams } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 import ProductDetails from "./ProductDetails.mjs";
-import { initializeCartCount } from "./CartCount.mjs";
+// import { initializeCartCount } from "./CartCount.mjs";
+loadHeaderFooter();
 
 const dataSource = new ProductData("tents");
 const productId = getParams("product");
@@ -50,5 +50,6 @@ const productId = getParams("product");
 const product = new ProductDetails(productId, dataSource);
 product.init();
 
-// Initialize cart count functionality
-initializeCartCount();
+
+// // Initialize cart count functionality
+// initializeCartCount();
