@@ -9,21 +9,22 @@ function productDetailsTemplate(product) {
     ? ((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice * 100).toFixed(0)
     : 0;
 
-  return `<section class="product-detail">
+    return `<section class="product-detail">
     <h3>${product.Brand.Name}</h3>
-    <h2 class="divider">${product.NameWithoutBrand}</h2>
-    <img class="divider" src="${product.Image}" alt="${product.NameWithoutBrand}" />
+    <h2 class="divider">${product.Name}</h2>
+    <img class="divider" src="${product.Images.PrimaryLarge}" alt="${product.Name}" />
     <p class="product-card__price">
       ${isDiscounted 
         ? `$${product.FinalPrice} (<span class="discount-percentage">-${discountPercentage}%</span>)<span class="original-price">$${product.SuggestedRetailPrice}</span>` 
         : `$${product.FinalPrice}`}
     </p>
-    <p class="product__color"> Color: ${product.Colors[0].ColorName}</p>
+    <p class="product__color">Color: ${product.Colors[0].ColorName}</p>
     <p class="product__description">${product.DescriptionHtmlSimple}</p>
     <div class="product-detail__add">
       <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
     </div>
   </section>`;
+
 }
 
 

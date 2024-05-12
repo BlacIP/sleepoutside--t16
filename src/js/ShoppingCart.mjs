@@ -48,7 +48,7 @@ class ShoppingCart {
 
     return `<li class="cart-card divider" data-id="${item.Id}">
               <a href="${productDetailUrl}" class="cart-card__image">
-                <img src="${item.Image}" alt="${item.Name}" />
+                <img src="${item.Images.PrimaryMedium}" alt="Image of ${item.Name}" />
               </a>
               <div>
                 <a href="${productDetailUrl}">
@@ -63,6 +63,7 @@ class ShoppingCart {
               </div>
               <div> <span class="remove-item" data-id="${item.Id}">X</span> </div>
             </li>`;
+
   }
 }
 
