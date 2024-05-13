@@ -46,15 +46,18 @@ class ShoppingCart {
       ((item.SuggestedRetailPrice - item.FinalPrice) / item.SuggestedRetailPrice * 100).toFixed(0) : 0;
     const productDetailUrl = `/product_pages/?product=${item.Id}`;
 
+    // Use the PrimaryMedium image if available, otherwise, use a default image path
+    const imageSrc = item.Images && item.Images.PrimaryMedium ? item.Images.PrimaryMedium : "path/to/default/image.jpg";
+
     return `<li class="cart-card divider" data-id="${item.Id}">
               <a href="${productDetailUrl}" class="cart-card__image">
-                <img src="${item.Images.PrimaryMedium}" alt="Image of ${item.Name}" />
+                <img src="${imageSrc}" alt="Image of ${item.Name}" />
               </a>
               <div>
                 <a href="${productDetailUrl}">
                   <h2 class="card__name">${item.Name}</h2>
                 </a>
-                <p class="cart-card__color">${item.Colors[0].ColorName}</p>
+                <p class="cart-card__color">${item.Colors && item.Colors.length > 0 ? item.Colors[0].ColorName : "Color not available"}</p>
                 <p class="cart-card__quantity">Qty: ${item.quantity}</p>
                 <p class="cart-card__price">$${item.FinalPrice}
                   ${isDiscounted ? `<span class="discount-tag">-${discountPercentage}%</span>` : ""}
@@ -63,8 +66,7 @@ class ShoppingCart {
               </div>
               <div> <span class="remove-item" data-id="${item.Id}">X</span> </div>
             </li>`;
-
-  }
+}
 }
 
 export default ShoppingCart;
