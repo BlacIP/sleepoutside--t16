@@ -1,18 +1,13 @@
 import { renderListWithTemplate } from "./utils.mjs";
 
-// Define an array of product IDs that you want to display
-const allowedProductIds = ["880RR", "985RF", "985PR", "344YJ"];  // Replace with actual product IDs you want to show
+const categories = ["tents", "backpacks", "sleeping-bags", "hammocks"];
 
 function productCardTemplate(product) {
-  // Only render the card if the product's ID is in the allowedProductIds array
-  if (!allowedProductIds.includes(product.Id)) {
-    return "";  // Do not render anything for products not in the list
-  }
-
   const isDiscounted = product.FinalPrice < product.SuggestedRetailPrice;
   const discountPercentage = isDiscounted ?
     ((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice * 100).toFixed(0) : 0;
-    return `<li class="product-card">
+
+  return `<li class="product-card">
     <a href="/product_pages/?product=${product.Id}">
       <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Name}" />
       <h3 class="card__brand">${product.Brand.Name}</h3>
@@ -23,26 +18,69 @@ function productCardTemplate(product) {
       </p>
     </a>
   </li>`;
-
 }
 
 export default class ProductList {
-  constructor(category, dataSource, listElement) {
-    // We passed in this information to make our class as reusable as possible.
-    // Being able to define these things when we use the class will make it very flexible
-    this.category = category;
+  constructor(query, dataSource, listElement, isSearch = false) {
+    this.query = query;
     this.dataSource = dataSource;
     this.listElement = listElement;
+    this.isSearch = isSearch;
+    this.sortOption = "name-asc"; // Default sort option
   }
+
   async init() {
-    // our dataSource will return a Promise...so we can use await to resolve it.
-    const list = await this.dataSource.getData(this.category);
-    // render the list
+    let allProducts = [];
+    for (const category of categories) {
+      const products = await this.dataSource.getData(category);
+      allProducts = allProducts.concat(products);
+    }
+
+    let list = [];
+    if (this.isSearch) {
+      list = this.filterProducts(allProducts, this.query);
+    } else {
+      list = allProducts.filter(product => product.Category === this.query);
+    }
+
+    list = this.sortProducts(list, this.sortOption);
     this.renderList(list);
-    //set the title to the current category
-    document.querySelector(".title").innerHTML = this.category;
+    document.querySelector(".title").innerHTML = this.query;
+
+    // Attach event listener for sorting
+    document.querySelector("#sort").addEventListener("change", (e) => {
+      this.sortOption = e.target.value;
+      list = this.sortProducts(list, this.sortOption);
+      this.renderList(list);
+    });
   }
-  // render after doing the first stretch
+
+  filterProducts(products, query) {
+    const lowerQuery = query.toLowerCase();
+    return products.filter(product => {
+      const inBrand = product.Brand && product.Brand.Name.toLowerCase().includes(lowerQuery);
+      const inName = product.Name && product.Name.toLowerCase().includes(lowerQuery);
+      const inColor = product.Colors && product.Colors.some(color => color.ColorName.toLowerCase().includes(lowerQuery));
+      const inPrice = product.FinalPrice && `${product.FinalPrice}`.includes(lowerQuery);
+      return inBrand || inName || inColor || inPrice;
+    });
+  }
+
+  sortProducts(products, sortOption) {
+    switch (sortOption) {
+      case "name-asc":
+        return products.sort((a, b) => a.Name.localeCompare(b.Name));
+      case "name-desc":
+        return products.sort((a, b) => b.Name.localeCompare(a.Name));
+      case "price-asc":
+        return products.sort((a, b) => a.FinalPrice - b.FinalPrice);
+      case "price-desc":
+        return products.sort((a, b) => b.FinalPrice - a.FinalPrice);
+      default:
+        return products;
+    }
+  }
+
   renderList(list) {
     renderListWithTemplate(productCardTemplate, this.listElement, list);
   }
