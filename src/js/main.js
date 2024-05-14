@@ -6,8 +6,6 @@ import { loadHeaderFooter } from "./utils.mjs"; // Make sure to import loadHeade
 // Load header and footer
 loadHeaderFooter();
 
-
-
 // const dataSource = new ProductData("tents");
 // const element = document.querySelector(".product-list");
 // const listing = new ProductList("Tents", dataSource, element);

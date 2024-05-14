@@ -29,6 +29,7 @@ header {
   display: flex;
   justify-content: space-between;
   padding: 0 10px;
+  align-items: center;
 }
 .logo {
   line-height: 60px;
@@ -203,7 +204,7 @@ button {
   grid-row: 2;
   grid-column: 3;
 }
-p.cart-card__price{
+p.cart-card__price {
   margin-bottom: 5px;
 }
 /* .cart-footer {
@@ -218,16 +219,16 @@ p.cart-card__price{
   display: none;
 }
 .discount-tag {
-    color: var(--secondary-color);
-    font-weight: bold;
-    margin-left: 10px;
+  color: var(--secondary-color);
+  font-weight: bold;
+  margin-left: 10px;
 }
 
 .original-price {
-    color: var(--tertiary-color);
-    text-decoration: line-through;
-    display: block; /* Ensures it appears on a new line */
-    margin-top: 5px;
+  color: var(--tertiary-color);
+  text-decoration: line-through;
+  display: block; /* Ensures it appears on a new line */
+  margin-top: 5px;
 }
 .cart-count {
   position: absolute;
@@ -247,19 +248,44 @@ p.cart-card__price{
 }
 .original-price {
   text-decoration: line-through; /* Strike through the original price */
-  color: var(--light-grey); /* Grey out the original price to indicate it is not the current price */
+  color: var(
+    --light-grey
+  ); /* Grey out the original price to indicate it is not the current price */
   margin-right: 10px; /* Space between the original and the final price */
 }
 
 .discount-percentage {
-  color: var(--secondary-color); /* Highlight only the discount percentage in red */
+  color: var(
+    --secondary-color
+  ); /* Highlight only the discount percentage in red */
   font-weight: bold; /* Make the discount percentage bold to stand out */
 }
-.remove-item{
+.remove-item {
   cursor: pointer;
 }
 .title {
   text-transform: capitalize;
+}
+#search-form {
+  display: flex;
+  font-size: 12px;
+}
+.decrease-quantity,
+.increase-quantity {
+  padding: 2px 10px 2px 10px;
+}
+.quantity-count {
+  display: flex;
+  gap: 10px;
+}
+.cart-card__quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 10px;
+}
+.cart-card__quantity {
+  margin: 0;
 }
 
 @media screen and (min-width: 500px) {
