@@ -89,9 +89,10 @@ class ShoppingCart {
                 </a>
                 <p class="cart-card__color">${item.Colors && item.Colors.length > 0 ? item.Colors[0].ColorName : "Color not available"}</p>
                 <div class="cart-card__quantity-controls">
-                <p class="cart-card__quantity">Qty: ${item.quantity}</p>
+                
                 <div class="quantity-count">
                   <button class="decrease-quantity" data-id="${item.Id}">-</button>
+                  <p class="cart-card__quantity"> ${item.quantity}</p>
                   <button class="increase-quantity" data-id="${item.Id}">+</button>
                   </div>
                 </div>

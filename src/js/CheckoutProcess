@@ -1,0 +1,66 @@
+import { getLocalStorage } from './utils.mjs';
+import ExternalServices from './externalservices.mjs';
+
+export default class CheckoutProcess {
+  constructor(key, outputSelector) {
+    this.key = key;
+    this.outputSelector = outputSelector;
+    this.list = [];
+    this.itemTotal = 0;
+    this.shipping = 0;
+    this.tax = 0;
+    this.orderTotal = 0;
+  }
+
+  init() {
+    this.list = getLocalStorage(this.key);
+    this.calculateItemSummary();
+  }
+
+  calculateItemSummary() {
+    this.itemTotal = this.list.reduce((total, item) => total + item.price * item.quantity, 0);
+    document.getElementById('subtotal').textContent = this.itemTotal.toFixed(2);
+  }
+
+  calculateOrderTotal(zip) {
+    const shipping = 10 + (this.list.length - 1) * 2;
+    const tax = this.itemTotal * 0.06;
+    this.shipping = shipping;
+    this.tax = tax;
+    this.orderTotal = this.itemTotal + shipping + tax;
+    this.displayOrderTotals();
+  }
+
+  displayOrderTotals() {
+    document.getElementById('shipping').textContent = this.shipping.toFixed(2);
+    document.getElementById('tax').textContent = this.tax.toFixed(2);
+    document.getElementById('total').textContent = this.orderTotal.toFixed(2);
+  }
+
+  async checkout(form) {
+    const formData = new FormData(form);
+    const order = {
+      orderDate: new Date().toISOString(),
+      fname: formData.get('fname'),
+      lname: formData.get('lname'),
+      street: formData.get('street'),
+      city: formData.get('city'),
+      state: formData.get('state'),
+      zip: formData.get('zip'),
+      cardNumber: formData.get('cardNumber'),
+      expiration: formData.get('expiration'),
+      code: formData.get('code'),
+      items: this.list,
+      orderTotal: this.orderTotal.toFixed(2),
+      shipping: this.shipping.toFixed(2),
+      tax: this.tax.toFixed(2),
+    };
+    const externalServices = new ExternalServices();
+    try {
+      const response = await externalServices.checkout(order);
+      alert('Order placed successfully');
+    } catch (error) {
+      alert('There was an issue with your order');
+    }
+  }
+}
