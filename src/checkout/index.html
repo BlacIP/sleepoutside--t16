@@ -1,30 +1,3 @@
-<!-- <!doctype html>
-
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Sleep Outside | Checkout</title>
-    <link rel="stylesheet" href="/css/style.css" />
-    <script src="../js/main.js" type="module"></script>
-  </head>
-
-  <body>
-    <header class="divider" id="main-header">
-      
-    </header>
-
-    <main class="divider">
-      <section class="products">
-        <h2>Review & Place your Order</h2>
-      </section>
-    </main>
-
-    <footer id="main-footer">&copy;NOT a real business</footer>
-  </body>
-</html> -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -32,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sleep Outside | Checkout</title>
     <link rel="stylesheet" href="/css/style.css" />
-    <script src="../js/main.js" type="module"></script>
   </head>
   <body>
     <header class="divider" id="main-header"></header>
@@ -99,11 +71,24 @@
           </div>
           <div class="order-summary">
             <h3>Order Summary</h3>
-            <p>Subtotal: <span id="subtotal"></span></p>
-            <p>Shipping: <span id="shipping"></span></p>
-            <p>Tax: <span id="tax"></span></p>
-            <p>Total: <span id="total"></span></p>
+            <div class="summary-item">
+              <span>Subtotal:</span>
+              <span id="subtotal">₦ 0.00</span>
+            </div>
+            <div class="summary-item">
+              <span>Shipping:</span>
+              <span id="shipping">₦ 0.00</span>
+            </div>
+            <div class="summary-item">
+              <span>Tax:</span>
+              <span id="tax">₦ 0.00</span>
+            </div>
+            <div class="summary-item total">
+              <span>Total:</span>
+              <span id="total">₦ 0.00</span>
+            </div>
           </div>
+          
         </section>
       </section>
       <!-- <h2>Review & Place your Order</h2> -->
