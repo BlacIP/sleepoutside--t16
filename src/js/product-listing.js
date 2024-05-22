@@ -1,11 +1,11 @@
 import { loadHeaderFooter, getParams } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
 const query = getParams("query");
-const dataSource = new ProductData();
+const dataSource = new ExternalServices();
 const element = document.querySelector(".product-list");
 const titleElement = document.querySelector(".title");
 
