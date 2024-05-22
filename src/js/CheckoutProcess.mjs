@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { getLocalStorage, removeLocalStorage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
-import { refreshCartCount } from "./CartCount.mjs"; // Import the refreshCartCount function
+import { refreshCartCount } from "./CartCount.mjs"; 
 
 function packageItems(items) {
   return items.map(item => ({
@@ -78,12 +78,12 @@ export default class CheckoutProcess {
       shipping: this.shipping.toFixed(2),
       tax: this.tax.toFixed(2)
     };
-    console.log("Order object:", order); // Log order object
+    console.log("Order object:", order); 
     const externalServices = new ExternalServices();
     try {
       const response = await externalServices.checkout(order);
       alert("Order placed successfully");
-      console.log(response); // For debugging purposes, remove in production
+      console.log(response); 
 
       // Clear the cart
       removeLocalStorage(this.key);
@@ -103,7 +103,7 @@ export default class CheckoutProcess {
       document.getElementById("total").textContent = `$ 0.00`;
     } catch (error) {
       alert("There was an issue with your order");
-      console.error(error); // For debugging purposes, remove in production
+      console.error(error); 
     }
   }
 }
