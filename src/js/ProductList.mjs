@@ -8,6 +8,7 @@ function productCardTemplate(product) {
     ((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice * 100).toFixed(0) : 0;
 
   return `<li class="product-card">
+  
     <a href="/product_pages/?product=${product.Id}">
       <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Name}" />
       <h3 class="card__brand">${product.Brand.Name}</h3>
@@ -17,8 +18,11 @@ function productCardTemplate(product) {
         ${isDiscounted ? `<span class="discount-tag">(-${discountPercentage}%)</span>` : ""}
       </p>
     </a>
+    <button class="quick-view-btn" data-id="${product.Id}">Quick View</button>
+    
   </li>`;
 }
+
 
 export default class ProductList {
   constructor(query, dataSource, listElement, isSearch = false) {
@@ -45,7 +49,12 @@ export default class ProductList {
 
     list = this.sortProducts(list, this.sortOption);
     this.renderList(list);
-    document.querySelector(".title").innerHTML = this.query;
+
+    if (list.length === 0) {
+      this.showNoResultsMessage();
+    } else {
+      document.querySelector(".title").innerHTML = this.query;
+    }
 
     // Attach event listener for sorting
     document.querySelector("#sort").addEventListener("change", (e) => {
@@ -53,6 +62,9 @@ export default class ProductList {
       list = this.sortProducts(list, this.sortOption);
       this.renderList(list);
     });
+
+    // Attach event listeners for quick view buttons
+    this.addQuickViewEventListeners(list);
   }
 
   filterProducts(products, query) {
@@ -83,5 +95,48 @@ export default class ProductList {
 
   renderList(list) {
     renderListWithTemplate(productCardTemplate, this.listElement, list);
+  }
+
+  showNoResultsMessage() {
+    const noResultsMessage = document.createElement("p");
+    noResultsMessage.className = "no-results";
+    noResultsMessage.textContent = "No products found for your search.";
+    this.listElement.appendChild(noResultsMessage);
+  }
+
+  addQuickViewEventListeners(products) {
+    const quickViewButtons = document.querySelectorAll(".quick-view-btn");
+    quickViewButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const productId = button.getAttribute("data-id");
+        const product = products.find(p => p.Id === productId);
+        this.showQuickViewModal(product);
+      });
+    });
+  }
+
+  showQuickViewModal(product) {
+    const modal = document.getElementById("product-modal");
+    const modalContent = document.getElementById("modal-product-details");
+    modalContent.innerHTML = `
+      <h3>${product.Brand.Name}</h3>
+      <h2>${product.Name}</h2>
+      <img src="${product.Images.PrimaryMedium}" alt="Image of ${product.Name}" />
+      <p>${product.Description}</p>
+      <p class="product-card__price">
+        ${product.FinalPrice < product.SuggestedRetailPrice ? 
+          `<span class="original-price">$${product.SuggestedRetailPrice}</span>$${product.FinalPrice}` : 
+          `$${product.FinalPrice}`}
+      </p>
+    `;
+    modal.style.display = "block";
+
+    // Close modal on click of 'x' or outside of modal
+    document.querySelector(".close").onclick = () => modal.style.display = "none";
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    };
   }
 }

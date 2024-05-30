@@ -136,6 +136,9 @@ button {
 }
 /* Styles for product lists */
 .product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   flex: 1 1 45%;
   margin: 0.25em;
   padding: 0.5em;
@@ -480,6 +483,25 @@ hr{
 #total,.total{
   font-weight: bold;
 }
+.alert{
+  background-color: var(--primary-color);
+  text-align: center;
+  padding: 5px 10px;
+  /* margin-bottom: 10px; */
+  width: fit-content;
+}
+.alert-message .close{
+  background-color: var(--dark-grey);
+  color: var(--light-grey);
+  padding: 2px 8px;
+  font-size: 20px;
+  margin-left: 20px;
+}
+.alert-message{
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}
 
 
 
@@ -500,4 +522,127 @@ hr{
 footer {
   font-size: var(--small-font);
   padding: 1em;
+}
+
+/* Modal styles */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    position: absolute;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    top: 40%;
+    left: 35%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.quick-view-btn{
+  font-size: var(--small-font);
+  margin: 0;
+}
+
+.modal-product {
+  background-color: #fefefe;
+  margin: 5% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+/* Add this CSS to your stylesheet */
+@keyframes cart-bounce {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.cart-bounce {
+  animation: cart-bounce 0.5s ease;
+}
+
+
+/* Add this CSS to your stylesheet */
+.newsletter {
+  background-color: #f9f9f9;
+  padding: 20px;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.newsletter h2 {
+  margin-bottom: 10px;
+}
+
+.newsletter form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.newsletter input[type="email"] {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 80%;
+  max-width: 300px;
+}
+
+.newsletter button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.newsletter button:hover {
+  background-color: #45a049;
+}
+
+.newsletter .success-message {
+  color: green;
+  margin-top: 10px;
+}
+
+
+.subscribe{
+  display: flex;
+  align-items: center;
+}
+.subscribe #email{
+  margin: 0;
 }
