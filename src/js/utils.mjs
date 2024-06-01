@@ -8,8 +8,10 @@ export function qs(selector, parent = document) {
 
 // retrieve data from localstorage
 export function getLocalStorage(key) {
-  return JSON.parse(localStorage.getItem(key));
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : [];
 }
+
 // save data to local storage
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
@@ -69,4 +71,13 @@ export async function loadHeaderFooter() {
   // Ensure cart count initialization happens after header is loaded
   refreshCartCount();  // Call this function here to ensure the DOM element it targets has been loaded.
 
+}
+
+// Add this function to your utils.mjs file
+export function animateCartIcon() {
+  const cartIcon = document.querySelector(".cart svg");
+  cartIcon.classList.add("cart-bounce");
+  cartIcon.addEventListener("animationend", () => {
+    cartIcon.classList.remove("cart-bounce");
+  });
 }

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sleep Outside | Register</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <script src="../js/register.js" type="module"></script>
+  </head>
+  <body>
+    <header class="divider" id="main-header"></header>
+    <main class="divider">
+      <section class="register-section">
+        <h2>Register</h2>
+        <form id="registerForm">
+          <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required />
+          </div>
+          <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div>
+            <label for="avatar">Avatar (optional):</label>
+            <input type="file" id="avatar" name="avatar" accept="image/*" />
+          </div>
+          <button type="submit">Register</button>
+        </form>
+        <div id="feedback" class="feedback"></div>
+      </section>
+    </main>
+    <footer id="main-footer">&copy;NOT a real business</footer>
+  </body>
+</html>

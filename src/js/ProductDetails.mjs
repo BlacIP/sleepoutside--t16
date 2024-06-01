@@ -1,6 +1,6 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
-import { refreshCartCount} from "./CartCount.mjs";
-
+import { refreshCartCount } from "./CartCount.mjs";
+import Alert from "./alerts.js"; // Import the Alert class
 
 function productDetailsTemplate(product) {
   // Determine if there is a discount
@@ -9,7 +9,7 @@ function productDetailsTemplate(product) {
     ? ((product.SuggestedRetailPrice - product.FinalPrice) / product.SuggestedRetailPrice * 100).toFixed(0)
     : 0;
 
-    return `<section class="product-detail">
+  return `<section class="product-detail">
     <h3>${product.Brand.Name}</h3>
     <h2 class="divider">${product.Name}</h2>
     <img class="divider" src="${product.Images.PrimaryLarge}" alt="${product.Name}" />
@@ -24,10 +24,7 @@ function productDetailsTemplate(product) {
       <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
     </div>
   </section>`;
-
 }
-
-
 
 export default class ProductDetails {
   constructor(productId, dataSource) {
@@ -35,6 +32,7 @@ export default class ProductDetails {
     this.product = {};
     this.dataSource = dataSource;
   }
+  
   async init() {
     // use our datasource to get the details for the current product. findProductById will return a promise! use await or .then() to process it
     this.product = await this.dataSource.findProductById(this.productId);
@@ -46,6 +44,7 @@ export default class ProductDetails {
       .getElementById("addToCart")
       .addEventListener("click", this.addToCart.bind(this));
   }
+
   addToCart() {
     // Retrieve existing cart items from local storage or initialize to an empty array if none exist
     const existingCart = getLocalStorage("so-cart") || [];
@@ -64,7 +63,10 @@ export default class ProductDetails {
     // Initialize cart count functionality
     refreshCartCount();
     
+    // Show success alert
+    Alert.alertMessage("Item added to cart successfully", true);
   }
+  
   renderProductDetails(selector) {
     const element = document.querySelector(selector);
     element.insertAdjacentHTML(
@@ -73,4 +75,3 @@ export default class ProductDetails {
     );
   }
 }
-
