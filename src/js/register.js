@@ -1,4 +1,5 @@
 import { loadHeaderFooter } from "./utils.mjs"; // Import the utility function to load header and footer
+import { displayError } from './errorHandler.js';
 
 // Load header and footer
 loadHeaderFooter();
@@ -9,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    if (feedbackElement) {
+        feedbackElement.textContent = ''; // Clear previous success messages
+    }
 
     const formData = new FormData(registerForm);
     const userData = {
@@ -37,12 +42,14 @@ document.addEventListener("DOMContentLoaded", () => {
         registerForm.reset();
       } else {
         const errorData = await response.json();
-        feedbackElement.textContent = `Error: ${errorData.message}`;
-        feedbackElement.style.color = "red";
+        // feedbackElement.textContent = `Error: ${errorData.message}`; // Replaced
+        // feedbackElement.style.color = "red"; // Replaced
+        displayError(`Registration failed: ${errorData.message}`);
       }
     } catch (error) {
-      feedbackElement.textContent = `Error: ${error.message}`;
-      feedbackElement.style.color = "red";
+      // feedbackElement.textContent = `Error: ${error.message}`; // Replaced
+      // feedbackElement.style.color = "red"; // Replaced
+      displayError(`An unexpected error occurred: ${error.message}`);
     }
   });
 

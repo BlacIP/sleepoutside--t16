@@ -1,4 +1,5 @@
 import { loadHeaderFooter, loadTemplate } from "./utils.mjs"; // Import the utility functions
+import { displayError } from './errorHandler.js';
 
 // Load header, footer, and modal
 loadHeaderFooter();
@@ -60,10 +61,20 @@ document.addEventListener("DOMContentLoaded", () => {
       form.reset();
     }, 1000);
   });
+}); // This is the end of the old DOMContentLoaded listener for newsletter
 
-  // Clear the email from local storage on page reload
-  window.addEventListener("load", () => {
-    localStorage.removeItem("newsletterEmails");
-  });
-});
+
+// Global Error Handlers
+window.onerror = function(message, source, lineno, colno, error) {
+  console.error("Global error caught by window.onerror:", { message, source, lineno, colno, error });
+  displayError("An unexpected error occurred. Please try again or contact support if the issue persists.");
+  return true; // Prevents default browser error handling
+};
+
+window.onunhandledrejection = function(event) {
+  console.error("Global promise rejection caught by window.onunhandledrejection:", event.reason);
+  const errorMessage = (event.reason && event.reason.message) ? event.reason.message : "An unknown error occurred with a promise.";
+  displayError(`An unexpected promise rejection occurred: ${errorMessage}`);
+  // event.preventDefault(); // Uncomment if you want to prevent further default actions
+};
 
