@@ -1,5 +1,5 @@
 import { loadHeaderFooter, loadTemplate } from "./utils.mjs"; // Import the utility functions
-import { displayError } from './errorHandler.js';
+import { displayError } from "./errorHandler.js";
 
 // Load header, footer, and modal
 loadHeaderFooter();

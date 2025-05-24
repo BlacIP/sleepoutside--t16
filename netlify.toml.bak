@@ -1,0 +1,9 @@
+[build]
+  functions = "netlify/functions"
+
+# Optional: Specify Node.js version for functions, if needed.
+# Netlify usually has a recent default, but you can pin it.
+# [functions]
+#   node_bundler = "esbuild" # Recommended for faster builds
+#   [functions.environment] # Example of setting env vars directly, though UI is better for secrets
+#     SOME_VARIABLE = "some_value"
