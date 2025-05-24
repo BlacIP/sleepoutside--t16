@@ -3,19 +3,13 @@ import { displayError } from '../js/errorHandler.js'; // Will be the mock
 
 jest.mock('../js/errorHandler.js'); // Mock errorHandler module
 
-// No longer need jest.useFakeTimers()
+// No RESEND_API_KEY, RESEND_API_URL, or ADMIN_EMAIL constants needed here anymore
 
-describe('Newsletter Subscription with Resend API', () => {
+describe('Newsletter Subscription with Netlify Function', () => {
   let newsletterForm;
   let emailInput;
   let successMessageElement;
   let submitButton; // For checking disabled state
-
-  // Store the Resend API Key used in newsletter.js to check in headers
-  // This must match the key in newsletter.js for tests to pass.
-  const RESEND_API_KEY = 're_c58Vdr9p_BeEHFy5DtDc3Kng2Xc5ukhxq';
-  const RESEND_API_URL = 'https://api.resend.com/emails';
-  const ADMIN_EMAIL = 'omotoyinbobade15@gmail.com';
 
   beforeEach(() => {
     // Set up the DOM
@@ -62,110 +56,73 @@ describe('Newsletter Subscription with Resend API', () => {
 
   test('should display error for empty email submission', async () => {
     emailInput.value = '';
-    // The event listener is async, so we await its completion by awaiting a promise that resolves after the current macrotask.
     newsletterForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     await new Promise(process.nextTick);
 
     expect(displayError).toHaveBeenCalledWith('Please enter a valid email address.');
     expect(global.fetch).not.toHaveBeenCalled();
-    expect(submitButton.disabled).toBe(false); // Should not be disabled if validation fails client-side quickly
+    expect(submitButton.disabled).toBe(false);
     expect(emailInput.disabled).toBe(false);
   });
 
-  test('should send emails and display success on valid submission', async () => {
-    global.fetch
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 'email_user_id' }) }) // Welcome email
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 'email_admin_id' }) }); // Admin email
+  test('should call Netlify function and display success on valid submission', async () => {
+    global.fetch.mockResolvedValueOnce({ 
+      ok: true, 
+      json: async () => ({ message: 'Subscription successful! Welcome email sent.' }) 
+    });
 
     const testUserEmail = 'test@example.com';
     emailInput.value = testUserEmail;
     
-    const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-    newsletterForm.dispatchEvent(submitEvent);
+    newsletterForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
 
-    // Check disabled state immediately after dispatch (before await)
     expect(submitButton.disabled).toBe(true);
     expect(emailInput.disabled).toBe(true);
 
-    // Wait for promises to resolve
     await new Promise(process.nextTick); 
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-    // Check call 1 (User Welcome)
-    expect(global.fetch.mock.calls[0][0]).toBe(RESEND_API_URL);
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch.mock.calls[0][0]).toBe('/.netlify/functions/send-newsletter-email');
     expect(global.fetch.mock.calls[0][1].method).toBe('POST');
-    expect(global.fetch.mock.calls[0][1].headers.Authorization).toBe(`Bearer ${RESEND_API_KEY}`);
-    const welcomePayload = JSON.parse(global.fetch.mock.calls[0][1].body);
-    expect(welcomePayload.to[0]).toBe(testUserEmail);
-    expect(welcomePayload.subject).toBe('Welcome to the Community!');
-
-    // Check call 2 (Admin Notification)
-    expect(global.fetch.mock.calls[1][0]).toBe(RESEND_API_URL);
-    expect(global.fetch.mock.calls[1][1].method).toBe('POST');
-    expect(global.fetch.mock.calls[1][1].headers.Authorization).toBe(`Bearer ${RESEND_API_KEY}`);
-    const adminPayload = JSON.parse(global.fetch.mock.calls[1][1].body);
-    expect(adminPayload.to[0]).toBe(ADMIN_EMAIL);
-    expect(adminPayload.html).toContain(testUserEmail);
+    expect(global.fetch.mock.calls[0][1].headers['Content-Type']).toBe('application/json');
+    // No Authorization header check here
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({ userEmail: testUserEmail });
 
     expect(successMessageElement.style.display).toBe('block');
-    expect(successMessageElement.textContent).toBe('Thank you for signing up!');
+    expect(successMessageElement.textContent).toBe('Thank you for signing up!'); // Or use the message from mocked json response
     expect(emailInput.value).toBe(''); // Form reset
     expect(displayError).not.toHaveBeenCalled();
     expect(submitButton.disabled).toBe(false); 
     expect(emailInput.disabled).toBe(false);
   });
 
-  test('should display error if user welcome email fails', async () => {
+  test('should display error if Netlify function call fails', async () => {
+    const functionErrorMessage = 'Netlify function error: Something went wrong.';
     global.fetch.mockResolvedValueOnce({ 
       ok: false, 
-      json: async () => ({ message: 'Failed sending user email' }) 
+      json: async () => ({ message: functionErrorMessage }) 
     });
 
     const testUserEmail = 'testfail@example.com';
     emailInput.value = testUserEmail;
     newsletterForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
     
-    expect(submitButton.disabled).toBe(true); // Check disabled state
+    expect(submitButton.disabled).toBe(true);
     expect(emailInput.disabled).toBe(true);
 
     await new Promise(process.nextTick);
 
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    expect(displayError).toHaveBeenCalledWith('Failed to send welcome email. Please try again.');
+    expect(global.fetch.mock.calls[0][0]).toBe('/.netlify/functions/send-newsletter-email');
+    expect(JSON.parse(global.fetch.mock.calls[0][1].body)).toEqual({ userEmail: testUserEmail });
+    
+    expect(displayError).toHaveBeenCalledWith(functionErrorMessage);
     expect(successMessageElement.style.display).toBe('none');
     expect(emailInput.value).toBe(testUserEmail); // Not reset
     expect(submitButton.disabled).toBe(false); 
     expect(emailInput.disabled).toBe(false);
   });
   
-  test('should show success to user even if admin notification email fails', async () => {
-    global.fetch
-      .mockResolvedValueOnce({ ok: true, json: async () => ({ id: 'email_user_id' }) }) // Welcome email succeeds
-      .mockResolvedValueOnce({ ok: false, json: async () => ({ message: 'Failed sending admin email' }) }); // Admin email fails
-
-    const testUserEmail = 'adminfail@example.com';
-    emailInput.value = testUserEmail;
-    newsletterForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-
-    expect(submitButton.disabled).toBe(true);
-    expect(emailInput.disabled).toBe(true);
-    
-    await new Promise(process.nextTick);
-
-    expect(global.fetch).toHaveBeenCalledTimes(2);
-    // Call 1 (User Welcome)
-    expect(global.fetch.mock.calls[0][1].method).toBe('POST');
-    expect(JSON.parse(global.fetch.mock.calls[0][1].body).to[0]).toBe(testUserEmail);
-    // Call 2 (Admin Notification) - just check it was attempted
-    expect(global.fetch.mock.calls[1][1].method).toBe('POST');
-    expect(JSON.parse(global.fetch.mock.calls[1][1].body).to[0]).toBe(ADMIN_EMAIL);
-
-
-    expect(successMessageElement.style.display).toBe('block');
-    expect(successMessageElement.textContent).toBe('Thank you for signing up!');
-    expect(emailInput.value).toBe(''); // Form reset
-    expect(displayError).not.toHaveBeenCalled(); // User-facing error should not be displayed
-    expect(submitButton.disabled).toBe(false);
-    expect(emailInput.disabled).toBe(false);
-  });
+  // The test 'should show success to user even if admin notification email fails' is removed
+  // as that logic is now encapsulated in the Netlify function.
 });

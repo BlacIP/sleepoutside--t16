@@ -1,10 +1,6 @@
 import { displayError } from './errorHandler.js';
 
-// WARNING: Storing API keys client-side is a security risk!
-// This key will be visible in the browser. For production,
-// move this logic to a backend service.
-const RESEND_API_KEY = 're_c58Vdr9p_BeEHFy5DtDc3Kng2Xc5ukhxq';
-const RESEND_API_URL = 'https://api.resend.com/emails';
+// Resend API Key and URL constants are removed.
 
 export function initNewsletterForm() {
   const newsletterForm = document.getElementById('newsletter-form');
@@ -49,67 +45,34 @@ export function initNewsletterForm() {
     if (submitButton) submitButton.disabled = true;
 
     try {
-      // 1. Send Welcome Email to User
-      const welcomeEmailPayload = {
-        from: 'Acme <onboarding@resend.dev>',
-        to: [userEmail],
-        subject: 'Welcome to the Community!',
-        html: '<p>Thanks for signing up! We are excited to have you.</p>',
-      };
-
-      const welcomeResponse = await fetch(RESEND_API_URL, {
+      const response = await fetch('/.netlify/functions/send-newsletter-email', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(welcomeEmailPayload),
+        body: JSON.stringify({ userEmail: userEmail }), // Send only the user's email
       });
 
-      if (!welcomeResponse.ok) {
-        const errorData = await welcomeResponse.json();
-        console.error('Failed to send welcome email:', errorData);
-        throw new Error('Failed to send welcome email. Please try again.');
-      }
-      console.log('Welcome email sent successfully');
-
-      // 2. Send Notification Email to Admin
-      const adminNotificationEmail = 'omotoyinbobade15@gmail.com';
-      const notificationEmailPayload = {
-        from: 'Newsletter System <onboarding@resend.dev>',
-        to: [adminNotificationEmail],
-        subject: 'New Newsletter Subscriber',
-        html: `<p>A new user has subscribed to the newsletter: ${userEmail}</p>`,
-      };
-
-      const notificationResponse = await fetch(RESEND_API_URL, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(notificationEmailPayload),
-      });
-
-      if (!notificationResponse.ok) {
-        const errorData = await notificationResponse.json();
-        // Log this error, but don't necessarily block user success message if welcome email succeeded
-        console.error('Failed to send admin notification email:', errorData);
-        // Optionally, you could try to notify the admin via other means or log for follow-up
-      } else {
-        console.log('Admin notification email sent successfully');
+      if (!response.ok) {
+        const errorData = await response.json(); // Expecting JSON error from our function
+        // Use the message from our function's response, or a fallback
+        throw new Error(errorData.message || 'Subscription failed. Please try again.');
       }
 
-      // If welcome email was successful, show success to user
+      // const responseData = await response.json(); // Get data if needed, e.g. responseData.message
+
+      // If fetch was successful, show success to user
       if (successMessageElement) {
-        successMessageElement.textContent = 'Thank you for signing up!';
+        successMessageElement.textContent = 'Thank you for signing up!'; // Or use responseData.message
         successMessageElement.style.display = 'block';
         newsletterForm.reset();
       }
+      console.log('Successfully subscribed via Netlify function.');
 
     } catch (error) {
       console.error('Newsletter subscription error:', error);
-      displayError(error.message || 'Subscription failed. Please try again.');
+      // Display the error message thrown from the try block or a generic one for network issues
+      displayError(error.message || 'An unexpected error occurred. Please try again.');
     } finally {
       // Re-enable form controls
       emailInput.disabled = false;

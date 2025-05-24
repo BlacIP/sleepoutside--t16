@@ -19,6 +19,7 @@
     "eslint-plugin-import": "^2.29.1",
     "identity-obj-proxy": "^4.0.0",
     "jest": "^29.7.0",
+    "node-fetch": "^2.6.7",
     "prettier": "^3.2.5",
     "vite": "^5.2.10"
   },
